@@ -13,10 +13,10 @@ We can also confirm that, seeing the subsequent growing eigenvalues - attempting
 #### Step 2: Clustering
 The first eigenvector $x_1$ is constant indicating the graph is connected. The vectors $x_2$ and $x_3$ however, these capture structural information that can be used to embed nodes into a 2D space. Representing each point as $(x_2(i), x_3(i))$ where $i$ is the node index, one could then apply k-means with $k=3$ to assign each node to a corresponding cluster.
 
-Since the proximity of the respective coordinates can be easily assessed visually in our case, we can conclude that the result should converge to:
+Since the proximity of the respective coordinates can be easily assessed visually in our case, we can conclude that the appropiate clusters are:
 - Cluster 1: $i = \{1, 4, 9, 10\}$
 - Cluster 2: $i = \{2,3,6,8\}$
-- Cluster 2: $i = \{5,7,11,12\}$
+- Cluster 3: $i = \{5,7,11,12\}$
 
 ### Exercise 5
 
