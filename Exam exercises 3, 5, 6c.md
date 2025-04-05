@@ -23,7 +23,7 @@ Since the proximity of the respective coordinates can be easily assessed visuall
 ![alt text](image-1.png)
 
 #### Step 1: Define the matrix $A$
-$A$ should be a $n \times n$ circulant matrix, such that:
+$A$ should be a $n \times n$ circulant matrix, specifically:
 $$
 A = \begin{bmatrix}  
 S(x_0)\Delta x & S(x_{1})\Delta x & \cdots & S(x_{n-1})\Delta x \\  
@@ -34,16 +34,16 @@ S(x_{1})\Delta x & S(x_{2})\Delta x & \cdots & S(x_0)\Delta x
 $$
 
 where:     
-$A_{j,m} = S\left(x_{(m - j) \mod n}\right) \Delta x$ for $j, m = 0, 1, \dots, n-1$ and $\Delta x = 1/n$.
+$A_{j,m} = S\left(x_{(m - j) \mod n}\right) \Delta x$ for $j, m = \{0, 1, \dots, n-1\}$ and $m = (j+k)$.
 
-The $x_{(m - j) \mod n}$ ensures periodicity and thus, each row of $A$ is a cyclic shift of the previous row, reflecting the 1-periodic grid.
+The $x_{(m - j) \mod n}$ ensures periodicity by wrapping the index $k = (m−j)$ around the grid boundaries. Here, it always returns $k$ if $k \geq 0$ and $k+n$ otherwise.
 
 #### Step 2: Explain what is in the vectors $\boldsymbol{u}$ and $\boldsymbol{v}$
-- $\boldsymbol{u}$: n-periodic vector approximating $u(x)$ at grid points:
+- $\boldsymbol{u}$: contains discrete samples of the original 1-periodic function $u(x)$ taken at the grid points:
 $$
 \boldsymbol{u} = [u_0, u_1, \dots, u_{n-1}]^T, \quad u_j \approx u(x_j),  
 $$
-- $\boldsymbol{v}$: n-periodic vector storing the local averages:
+- $\boldsymbol{v}$: stores local averages of $u$ around each point $x_j$ (each computed with the expression for $v_j$ given in the task):
 $$
 \boldsymbol{v} = [v_0, v_1, \dots, v_{n-1}]^T, \quad v_j \approx v(x_j).  
 $$
@@ -63,11 +63,26 @@ S(x_{1})\Delta x & S(x_{2})\Delta x & \cdots & S(x_0)\Delta x
 \sum_{m=0}^{n-1} S(x_{(m - 1) \mod n})\Delta x \cdot u_m \\  
 \vdots \\  
 \sum_{m=0}^{n-1} S(x_{(m - (n-1)) \mod n})\Delta x \cdot u_m  
-\end{bmatrix}
-= 
-\begin{bmatrix} v_0 \\ v_1 \\ \vdots \\ v_{n-1} \end{bmatrix}  
+\end{bmatrix} 
 $$
 
+Thus, 
+$$
+v_j = \sum_{m=0}^{n-1} S(x_{(m - j) \mod n})\Delta x \cdot u_m
+$$
+This can be re-written as:
+$$
+v_j = \sum_{k=-j}^{n-1-j} S(x_{k \mod n})\Delta x \cdot u_{j+k}
+$$
+Since by the problem definition $S$ is non-negative and satisfies $S(-\frac{1}{2}) = S(\frac{1}{2}) = 0$ we can restrict the summation to:
+$$
+v_j = \sum_{k=-n/2}^{n/2-1} S(x_{k \mod n})\Delta x \cdot u_{j+k}
+$$
+The $x_k$ can be made implicitely n-periodic at this point just like $u_{j+k}$ has been the whole time:
+$$
+v_j = \sum_{k=-n/2}^{n/2-1} S(x_k)\Delta x \cdot u_{j+k}
+$$
+Which gives exactly the expression from the problem formulation.
 ### Exercise 6c
 
 ![alt text](image-2.png)
