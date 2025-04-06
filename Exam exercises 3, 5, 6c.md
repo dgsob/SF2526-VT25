@@ -22,6 +22,46 @@ Since the proximity of the respective coordinates can be easily assessed visuall
 
 ![alt text](image-1.png)
 
+#### Step 1: Vectors $\boldsymbol{u}$ and $\boldsymbol{v}$
+Since $\{u_j\}$ and $\{v_j\}$ are n-periodic sequences, for matrix multiplication they can be represented as vecotrs of length $n$,
+where:
+- $\boldsymbol{u}$: contains discrete samples of the original 1-periodic function $u(x)$ taken at the grid points:
+$$
+\boldsymbol{u} = [u_0, u_1, \dots, u_{n-1}]^T, \quad u_j \approx u(x_j),  
+$$
+- $\boldsymbol{v}$: stores local averages of $u$ around each point $x_j$ (each computed with the expression for $v_j$ given in the task):
+$$
+\boldsymbol{v} = [v_0, v_1, \dots, v_{n-1}]^T, \quad v_j \approx v(x_j).  
+$$
+
+#### Step 2: Define the matrix $A$
+We have:
+$$
+v_j = \sum_{k = -n/2}^{n/2 - 1} u_{j+k} S(x_k) \Delta x
+$$
+
+Here $k \in (-\frac{n}{2}, \dots, \frac{n}{2}-1)$, the range is of size $n$.
+
+We will do two substitutions:
+- Replace the summation over $k$, with summation over $m = j+k$, then $m \in (j -\frac{n}{2}, \dots, j + \frac{n}{2} - 1)$, with the size still equalt to $n$.  
+- Since $k$ is not an explicit index anymore, the $x_k$ becomes $x_{(m-j)}$.
+
+
+Thus we get:
+$$
+v_j = \sum_{m = j-n/2}^{j + n/2 - 1} u_{m} S(x_{(m-j)}) \Delta x
+$$
+
+Since $u_m$ is implicitely n-periodic (we could write $u_m = u_{m \mod n}$), we can wrap $m$ around a shifted range of the same size, obtaining:
+$$
+v_j = \sum_{m=0}^{n-1} u_{m} S(x_{(m-j)}) \Delta x
+$$
+
+This form allows us to formulate the $A$ matrix elements as:
+$$
+A_{j,m} = S\left(x_{(m - j)}\right) \Delta x
+$$
+----------------
 #### Step 1: Define the matrix $A$
 $A$ should be a $n \times n$ circulant matrix, specifically:
 $$
