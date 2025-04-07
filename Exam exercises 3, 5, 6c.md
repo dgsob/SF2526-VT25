@@ -1,8 +1,8 @@
 ## Exercises 3, 5, 6c from the exam 250310
 
-### Exercise 3
-
 ![After computing...](image.png)
+
+### Exercise 3
 
 #### Step 1: Determining the number of clusters
 The multiplicity of $\lambda = 0$ tells us how many connected components the graph has.    
@@ -18,9 +18,9 @@ Since the proximity of the respective coordinates can be easily assessed visuall
 - Cluster 2: $i = \{2,3,6,8\}$
 - Cluster 3: $i = \{5,7,11,12\}$
 
-### Exercise 5a
-
 ![alt text](image-1.png)
+
+### Exercise 5a
 
 #### Step 1: Vectors $\boldsymbol{u}$ and $\boldsymbol{v}$
 Since $\{u_j\}$ and $\{v_j\}$ are n-periodic sequences, for matrix multiplication they can be represented as vecotrs of length $n$,
@@ -119,7 +119,15 @@ As shown above, each element $v_j$ of $\boldsymbol{v}$ corresponds directly to t
 
 ### Exercise 5b
 
-### Exercise 6c
+1. Get the first column $\boldsymbol{z}$ of $A$ $\rightarrow$ complexity $\mathcal{O}(n)$.
+2. Compute eigenvalues $\boldsymbol{\lambda} = \text{FFT}(\boldsymbol{z})$ $\rightarrow$ complexity $\mathcal{O}(n \log n)$.
+3. Compute $\boldsymbol{v'} = \text{FFT}(\boldsymbol{v})$ $\rightarrow$ complexity $\mathcal{O}(n \log n)$.
+4. Now in frequency-domain, compute $\boldsymbol{u'} = \boldsymbol{v'} \mathbin{\mathtt{./}} \boldsymbol{\lambda}$ (element-wise division) $\rightarrow$ complexity $\mathcal{O}(n)$.
+5. Apply inverse FFT to go back to time-domain: $\boldsymbol{u} = \text{IFFT}(\boldsymbol{u'})$ $\rightarrow$ complexity $\mathcal{O}(n \log n)$.
+
+Total complexity dominated by the FFT steps, i.e. $\mathcal{O}(n \log n)$.
 
 ![alt text](image-2.png)
+
+### Exercise 6c
 
