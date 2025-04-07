@@ -34,61 +34,92 @@ $$
 \boldsymbol{v} = [v_0, v_1, \dots, v_{n-1}]^T, \quad v_j \approx v(x_j).  
 $$
 
-#### Step 2: Define the matrix $A$
+#### Step 2: Matrix $A$
+The periodic nature of the problem suggests that $A$ should be a circulant matrix.       
+
 We have:
+
 $$
-v_j = \sum_{k = -n/2}^{n/2 - 1} u_{j+k} S(x_k) \Delta x
+v_j = \sum_{k = -n/2}^{n/2 - 1} u_{j+k} S(x_k) \Delta x,
 $$
 
-Here $k \in (-\frac{n}{2}, \dots, \frac{n}{2}-1)$, the range is of size $n$.
+where: 
+- $x_k = k \Delta x$, 
+- $\Delta x = 1/n$, 
+- $n$ is even, 
+- $S$ is a smooth, non-negative function with $S(-1/2) = S(1/2) = 0$, 
+- $\{u_j\}$ is n-periodic ($u_j = u_{j \pm n}$),
+- $k \in (-\frac{n}{2}, \dots, \frac{n}{2}-1)$ - the range of size $n$ 
 
-We will do two substitutions:
-- Replace the summation over $k$, with summation over $m = j+k$, then $m \in (j -\frac{n}{2}, \dots, j + \frac{n}{2} - 1)$, with the size still equalt to $n$.  
-- Since $k$ is not an explicit index anymore, the $x_k$ becomes $x_{(m-j)}$.
+We will try to transform this expression into a matrix-vector product $v=Au$. To do so we will:
+- replace the summation over $k$, with summation over $m = j+k$,
+- this implies changing the $x_k$ into $x_{(m-j)}$.
 
-
-Thus we get:
+Thus we obtain:
 $$
 v_j = \sum_{m = j-n/2}^{j + n/2 - 1} u_{m} S(x_{(m-j)}) \Delta x
 $$
 
-Since $u_m$ is implicitely n-periodic (we could write $u_m = u_{m \mod n}$), we can wrap $m$ around a shifted range of the same size, obtaining:
+Since $u_m$ is implicitely n-periodic ($u_m = u_{m \pm n}$), we can wrap $m$ around a shifted range of the same size, $(0, \dots, n-1)$, that can serve as matrix indices. However $S(x_k)$ is not periodic, thus we must ensure $k=(m-j)$ is properly mapped to to original range of $k$.
+
+To achieve this we rewrite to expression as:
+
 $$
-v_j = \sum_{m=0}^{n-1} u_{m} S(x_{(m-j)}) \Delta x
+v_j = \sum_{m=0}^{n-1} u_m S(x_{k'(j, m)}) \Delta x,
 $$
 
-This form allows us to formulate the $A$ matrix elements as:
+where $k'(j, m)$ is defined such that:
+
 $$
-A_{j,m} = S\left(x_{(m - j)}\right) \Delta x
+k'(j, m) = 
+\begin{cases} 
+m - j & \text{if } -\frac{n}{2} \leq m - j < \frac{n}{2}, \\
+m - j - n & \text{if } m - j \geq \frac{n}{2}, \\
+m - j + n & \text{if } m - j < -\frac{n}{2}.
+\end{cases}
+$$   
+
+This form allows us to directly formulate the matrix $A$ elements as:
+
+$A_{j,m} = S\left( x_{k'(j, m)} \right) \Delta x$,
+
+where $x_{k'} = k' \Delta x$, and $j, m = 0, 1, \dots, n-1$.
+
+The matrix $A$ is circulant and each of its rows is a cyclic shift of the previous row. Thus it can be defined by a single row, e.g. for $j = 0$ (the first row):
+
 $$
-----------------
-#### Step 1: Define the matrix $A$
-$A$ should be a $n \times n$ circulant matrix, specifically:
+A_{0,m} = S\left( x_{k'(0, m)} \right) \Delta x
+=
+\left[ S(x_0), S(x_1), \dots, S\left(x_{\frac{n}{2} - 1}\right), S\left(x_{-\frac{n}{2}}\right), S\left(x_{-\frac{n}{2} + 1}\right), \dots, S(x_{-1}) \right] \Delta x
 $$
-A = \begin{bmatrix}  
-S(x_0)\Delta x & S(x_{1})\Delta x & \cdots & S(x_{n-1})\Delta x \\  
-S(x_{n-1})\Delta x & S(x_0)\Delta x & \cdots & S(x_{n-2})\Delta x \\  
-\vdots & \vdots & \ddots & \vdots \\  
-S(x_{1})\Delta x & S(x_{2})\Delta x & \cdots & S(x_0)\Delta x  
+
+The full matrix $A$ is then:
+
+$$
+A = \Delta x \begin{bmatrix}
+S(x_0) & S(x_1) & \cdots & S(x_{\frac{n}{2}-1}) & S(x_{-\frac{n}{2}}) & \cdots & S(x_{-1}) \\
+S(x_{-1}) & S(x_0) & \cdots & S(x_{\frac{n}{2}-2}) & S(x_{\frac{n}{2}-1}) & \cdots & S(x_{-2}) \\
+\vdots & \vdots & \ddots & \vdots & \vdots & \ddots & \vdots \\
+S(x_1) & S(x_2) & \cdots & S(x_{\frac{n}{2}-1}) & S(x_{-\frac{n}{2}+1}) & \cdots & S(x_0)
 \end{bmatrix},
 $$
 
-where:     
-$A_{j,m} = S\left(x_{(m - j) \mod n}\right) \Delta x$ for $j, m = \{0, 1, \dots, n-1\}$ and $m = (j+k)$.
+and the product $\boldsymbol{v} = A \boldsymbol{u}$ is:
 
-The $x_{(m - j) \mod n}$ ensures periodicity by wrapping the index $k = (m−j)$ around the grid boundaries. Here, it always returns $k$ if $k \geq 0$ and $k+n$ otherwise.
-
-#### Step 2: Explain what is in the vectors $\boldsymbol{u}$ and $\boldsymbol{v}$
-- $\boldsymbol{u}$: contains discrete samples of the original 1-periodic function $u(x)$ taken at the grid points:
 $$
-\boldsymbol{u} = [u_0, u_1, \dots, u_{n-1}]^T, \quad u_j \approx u(x_j),  
-$$
-- $\boldsymbol{v}$: stores local averages of $u$ around each point $x_j$ (each computed with the expression for $v_j$ given in the task):
-$$
-\boldsymbol{v} = [v_0, v_1, \dots, v_{n-1}]^T, \quad v_j \approx v(x_j).  
+\boldsymbol{v} = \begin{bmatrix}
+\sum_{m=0}^{n-1} u_m S\left( x_{k'(0, m)} \right) \Delta x \\
+\sum_{m=0}^{n-1} u_m S\left( x_{k'(1, m)} \right) \Delta x \\
+\vdots \\
+\sum_{m=0}^{n-1} u_m S\left( x_{k'(n-1, m)} \right) \Delta x
+\end{bmatrix}.
 $$
 
-#### Step 3: Show that $v$-sequence can be computed with $\boldsymbol{v} = A\boldsymbol{u}$
+As shown above, each element $v_j$ of $\boldsymbol{v}$ corresponds directly to the expression for $v_j$ from the problem definition.
+
+
+-----------------
+
 $$
 \begin{bmatrix}  
 S(x_0)\Delta x & S(x_{1})\Delta x & \cdots & S(x_{n-1})\Delta x \\  
@@ -105,24 +136,8 @@ S(x_{1})\Delta x & S(x_{2})\Delta x & \cdots & S(x_0)\Delta x
 \sum_{m=0}^{n-1} S(x_{(m - (n-1)) \mod n})\Delta x \cdot u_m  
 \end{bmatrix} 
 $$
+---------------
 
-Thus, 
-$$
-v_j = \sum_{m=0}^{n-1} S(x_{(m - j) \mod n})\Delta x \cdot u_m
-$$
-This can be re-written as:
-$$
-v_j = \sum_{k=-j}^{n-1-j} S(x_{k \mod n})\Delta x \cdot u_{j+k}
-$$
-Since by the problem definition $S$ is non-negative and satisfies $S(-\frac{1}{2}) = S(\frac{1}{2}) = 0$ we can restrict the summation to:
-$$
-v_j = \sum_{k=-n/2}^{n/2-1} S(x_{k \mod n})\Delta x \cdot u_{j+k}
-$$
-The $x_k$ can be made implicitely n-periodic at this point just like $u_{j+k}$ has been the whole time:
-$$
-v_j = \sum_{k=-n/2}^{n/2-1} S(x_k)\Delta x \cdot u_{j+k}
-$$
-Which gives exactly the expression from the problem formulation.
 ### Exercise 6c
 
 ![alt text](image-2.png)
