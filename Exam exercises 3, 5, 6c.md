@@ -117,26 +117,7 @@ $$
 
 As shown above, each element $v_j$ of $\boldsymbol{v}$ corresponds directly to the expression for $v_j$ from the problem definition.
 
-
------------------
-
-$$
-\begin{bmatrix}  
-S(x_0)\Delta x & S(x_{1})\Delta x & \cdots & S(x_{n-1})\Delta x \\  
-S(x_{n-1})\Delta x & S(x_0)\Delta x & \cdots & S(x_{n-2})\Delta x \\  
-\vdots & \vdots & \ddots & \vdots \\  
-S(x_{1})\Delta x & S(x_{2})\Delta x & \cdots & S(x_0)\Delta x  
-\end{bmatrix}  
-\begin{bmatrix} u_0 \\ u_1 \\ \vdots \\ u_{n-1} \end{bmatrix}
-=
-\begin{bmatrix}  
-\sum_{m=0}^{n-1} S(x_{(m - 0) \mod n})\Delta x \cdot u_m \\  
-\sum_{m=0}^{n-1} S(x_{(m - 1) \mod n})\Delta x \cdot u_m \\  
-\vdots \\  
-\sum_{m=0}^{n-1} S(x_{(m - (n-1)) \mod n})\Delta x \cdot u_m  
-\end{bmatrix} 
-$$
----------------
+### Exercise 5b
 
 ### Exercise 6c
 
