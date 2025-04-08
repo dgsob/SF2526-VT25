@@ -131,3 +131,23 @@ Total complexity dominated by the FFT steps, i.e. $\mathcal{O}(n \log n)$.
 
 ### Exercise 6c
 
+#### How to use the given block decomposition to construct the FFT:
+We are given:
+- vector $\boldsymbol{f}$ of length $n$, split into $\boldsymbol{f_a}$, $\boldsymbol{f_b}$, $\boldsymbol{f_c}$
+- DFT of the vector $\boldsymbol{f}$ expressed as the block decomposition $Z_n\boldsymbol{f}$
+
+The goal is to use it to construct the FFT for the case when $n = 3^p$, that is when $n$ is always divisible by $3$. This decomposition suggests a divide-and-conquer strategy.  
+
+To achieve the goal, we would:
+1. Split each sub-vector of size $n/3 = 3^{p-1}$ further into three sub-vectors of size $n/9 = 3^{p-2}$, and so on, until the size of each becomes $3^0 = 1$ when $Z_1\boldsymbol{f} = \boldsymbol{f}$ is a trivial operation.
+2. From there we work back up the recursion tree, performing the given matrix-vector multiplication. Each step calculates the DFTs of the sub-vectors and combines them in a proper way to form the full DFT, all the way up to the final form when from $Z_{n/3}\boldsymbol{f_a}$, $Z_{n/3}\boldsymbol{f_b}$, $Z_{n/3}\boldsymbol{f_c}$, we obtain $Z_n\boldsymbol{f}$.
+
+Such a recursive breakdown mirrors the structure of the FFT, reducing the problem into smaller DFTs at each step, which results in better computational complexity.
+
+#### Complexity of the method in terms of $n$:
+To determine the complexity, we first calculate the number of recursion levels. Since $n=3^p$, and each level divides the problem size by $3$, it takes $p$ divisions to reach $n=1$. Thus, there are $p=\log_3n$ levels.
+
+At each level, the complexity is dominated by the work performed to combine the subproblems. This work consists of unique multiplications and additions we have to perform on sub-vectors, and their respective DFTs, of sizes from $n/3$ to $1$. Ignoring the constants the complexity of each such subproblem combination is linear in terms of $n$, and can be expressed as $\mathcal{O}(n)$.
+
+Thus the total complexity is $\log_3n \times \mathcal{O}(n) = \mathcal{O}(n\log n)$.
+
