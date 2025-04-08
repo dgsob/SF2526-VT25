@@ -147,7 +147,7 @@ Such a recursive breakdown mirrors the structure of the FFT, reducing the proble
 #### Complexity of the method in terms of $n$:
 To determine the complexity, we first calculate the number of recursion levels. Since $n=3^p$, and each level divides the problem size by $3$, it takes $p$ divisions to reach $n=1$. Thus, there are $p=\log_3n$ levels.
 
-At each level, the complexity is dominated by the work performed to combine the subproblems. This work consists of unique multiplications and additions we have to perform on sub-vectors, and their respective DFTs, of sizes from $n/3$ to $1$. Ignoring the constants the complexity of each such subproblem combination is linear in terms of $n$, and can be expressed as $\mathcal{O}(n)$.
+At each level, the complexity is dominated by the work performed to combine the subproblems. This work consists of unique multiplications and additions we have to perform on respective DFTs of the sub-vectors of sizes from $n/3$ to $1$. Ignoring the constants that these operations introduce, the complexity of each such subproblem combination is linear in terms of $n$ $-$ as the number of the subproblems to solve grows accordingly, i.e., $3$ for $n/3$, up to $3^p$ for $1$ $-$  and can be expressed as $\mathcal{O}(n)$.
 
 Thus the total complexity is $\log_3n \times \mathcal{O}(n) = \mathcal{O}(n\log n)$.
 
